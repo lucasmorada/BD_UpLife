@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planner Tycoon</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .container {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .timeline {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .task {
+      padding: 15px;
+      background-color: #4caf50;
+      color: white;
+      border-radius: 8px;
+      cursor: grab;
+    }
+
+    .slot {
+      width: 100px;
+      height: 50px;
+      background-color: #ccc;
+      border: 2px dashed #aaa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 6px;
+    }
+
+    .log {
+      margin-top: 30px;
+      background: #fff;
+      padding: 15px;
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Planner Tycoon: A Saga do Cronograma</h1>
+    <p>Monte seu cronograma e vença os imprevistos da vida real!</p>
+  </header>
+
+  <div class="container">
+    <h2>Arraste as tarefas para a linha do tempo</h2>
+    <div class="timeline" id="timeline">
+      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="timeline" style="margin-top: 30px;">
+      <div class="task" draggable="true" ondragstart="drag(event)" id="task1">Fazer orçamento</div>
+      <div class="task" draggable="true" ondragstart="drag(event)" id="task2">Contratar equipe</div>
+      <div class="task" draggable="true" ondragstart="drag(event)" id="task3">Executar obra</div>
+    </div>
+
+    <div class="log" id="log">
+      <strong>Imprevistos:</strong>
+      <ul>
+        <li id="imprevisto">Nenhum por enquanto...</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      var data = ev.dataTransfer.getData("text");
+      var target = ev.target;
+      if (!target.hasChildNodes()) {
+        target.appendChild(document.getElementById(data));
+        sorteiaImprevisto();
+      }
+    }
+
+    function sorteiaImprevisto() {
+      const imprevistos = [
+        "Fornecedor atrasou a entrega!",
+        "Faltou energia na obra!",
+        "Cliente mudou o escopo!",
+        "Engenheiro ficou doente!",
+        "Orçamento foi cortado pela metade!"
+      ];
+      const rand = Math.floor(Math.random() * imprevistos.length);
+      document.getElementById("imprevisto").innerText = imprevistos[rand];
+    }
+  </script>
+</body>
+</html>
