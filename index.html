@@ -3,124 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planner Tycoon</title>
+  <title>Desafio do Planejador Supremo - Fase 1</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background-color: #1e1e1e;
+      color: #fff;
+      padding: 20px;
     }
 
     header {
-      background-color: #333;
-      color: #fff;
-      padding: 20px;
       text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .fase-box {
+      background-color: #2e2e2e;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 20px #00000050;
+    }
+
+    .pergunta {
+      margin-bottom: 20px;
+    }
+
+    .opcoes button {
+      display: block;
       width: 100%;
-    }
-
-    .container {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .timeline {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .task {
-      padding: 15px;
-      background-color: #4caf50;
-      color: white;
-      border-radius: 8px;
-      cursor: grab;
-    }
-
-    .slot {
-      width: 100px;
-      height: 50px;
-      background-color: #ccc;
-      border: 2px dashed #aaa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
       border-radius: 6px;
+      cursor: pointer;
+      background-color: #444;
+      color: white;
+      transition: background 0.2s;
     }
 
-    .log {
-      margin-top: 30px;
-      background: #fff;
+    .opcoes button:hover {
+      background-color: #666;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #111;
+      border-left: 4px solid #0f0;
+      display: none;
+    }
+
+    .missao {
+      margin: 20px 0;
       padding: 15px;
-      width: 80%;
-      max-width: 600px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: #333;
+      border-left: 4px solid orange;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Planner Tycoon: A Saga do Cronograma</h1>
-    <p>Monte seu cronograma e vença os imprevistos da vida real!</p>
+    <h1>Desafio do Planejador Supremo</h1>
+    <h3>Fase 1 - O Projeto Impossível</h3>
   </header>
 
-  <div class="container">
-    <h2>Arraste as tarefas para a linha do tempo</h2>
-    <div class="timeline" id="timeline">
-      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      <div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div class="fase-box">
+    <div class="missao">
+      <strong>Missão:</strong> Você foi contratado para entregar um hospital modular em 3 meses. Equipe limitada, orçamento apertado. Antes de começar o planejamento, prove que você entende do assunto!
     </div>
 
-    <div class="timeline" style="margin-top: 30px;">
-      <div class="task" draggable="true" ondragstart="drag(event)" id="task1">Fazer orçamento</div>
-      <div class="task" draggable="true" ondragstart="drag(event)" id="task2">Contratar equipe</div>
-      <div class="task" draggable="true" ondragstart="drag(event)" id="task3">Executar obra</div>
+    <div class="pergunta" id="pergunta1">
+      <p><strong>Pergunta 1:</strong> O que é o caminho crítico em um cronograma?</p>
+      <div class="opcoes">
+        <button onclick="responder(1, false)">O caminho com mais folga no projeto</button>
+        <button onclick="responder(1, true)">A sequência de tarefas que determina a duração total</button>
+        <button onclick="responder(1, false)">A lista de entregas prioritárias</button>
+        <button onclick="responder(1, false)">A margem de tempo usada para emergências</button>
+      </div>
     </div>
 
-    <div class="log" id="log">
-      <strong>Imprevistos:</strong>
-      <ul>
-        <li id="imprevisto">Nenhum por enquanto...</li>
-      </ul>
+    <div class="pergunta" id="pergunta2" style="display:none">
+      <p><strong>Pergunta 2:</strong> A Curva S em um projeto representa:</p>
+      <div class="opcoes">
+        <button onclick="responder(2, false)">A produtividade da equipe ao longo do tempo</button>
+        <button onclick="responder(2, false)">As tarefas mais atrasadas do projeto</button>
+        <button onclick="responder(2, true)">O progresso físico, financeiro e planejado cumulativo</button>
+        <button onclick="responder(2, false)">A variação entre tempo e escopo</button>
+      </div>
+    </div>
+
+    <div class="pergunta" id="pergunta3" style="display:none">
+      <p><strong>Pergunta 3:</strong> Se o projeto apresenta desvio do baseline, o que o planejador deve fazer?</p>
+      <div class="opcoes">
+        <button onclick="responder(3, false)">Excluir tarefas para compensar o tempo</button>
+        <button onclick="responder(3, false)">Ignorar o desvio, faz parte</button>
+        <button onclick="responder(3, false)">Reiniciar o projeto do zero</button>
+        <button onclick="responder(3, true)">Analisar as causas e replanejar com ações corretivas</button>
+      </div>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <strong>Parabéns! Você passou na fase teórica.</strong> Agora prepare-se para a fase prática: o cronograma da obra será liberado em breve...
     </div>
   </div>
 
   <script>
-    function allowDrop(ev) {
-      ev.preventDefault();
-    }
+    let acertos = 0;
 
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.id);
-    }
+    function responder(num, correto) {
+      if (correto) acertos++;
 
-    function drop(ev) {
-      ev.preventDefault();
-      var data = ev.dataTransfer.getData("text");
-      var target = ev.target;
-      if (!target.hasChildNodes()) {
-        target.appendChild(document.getElementById(data));
-        sorteiaImprevisto();
+      document.getElementById('pergunta' + num).style.display = 'none';
+      const prox = document.getElementById('pergunta' + (num + 1));
+
+      if (prox) {
+        prox.style.display = 'block';
+      } else {
+        document.getElementById('resultado').style.display = 'block';
+        document.getElementById('resultado').style.borderLeftColor = acertos >= 2 ? '#0f0' : '#f00';
+        document.getElementById('resultado').innerHTML = acertos >= 2
+          ? '<strong>Parabéns! Você passou na fase teórica.</strong> Agora prepare-se para a fase prática: o cronograma da obra será liberado em breve...'
+          : '<strong>Você falhou no teste teórico.</strong> Estude mais sobre planejamento e tente novamente!';
       }
-    }
-
-    function sorteiaImprevisto() {
-      const imprevistos = [
-        "Fornecedor atrasou a entrega!",
-        "Faltou energia na obra!",
-        "Cliente mudou o escopo!",
-        "Engenheiro ficou doente!",
-        "Orçamento foi cortado pela metade!"
-      ];
-      const rand = Math.floor(Math.random() * imprevistos.length);
-      document.getElementById("imprevisto").innerText = imprevistos[rand];
     }
   </script>
 </body>
