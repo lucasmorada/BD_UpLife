@@ -1,81 +1,108 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Ranking - Quiz UpLife</title>
+  <meta charset="UTF-8" />
+  <title>Ranking dos Jogadores</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      margin: 0;
+      background: linear-gradient(135deg, #fdf6e3, #e65100);
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding: 20px;
     }
-    h1 {
-      color: #e65100;
-    }
-    table {
+    .container {
+      background: #fff3e0;
+      max-width: 600px;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 10px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(230,81,0,0.4);
+      padding: 30px 40px;
       text-align: center;
     }
-    th {
-      background: #e65100;
-      color: #fff;
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: #e65100;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      user-select: none;
     }
-    .btn-restart {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #e65100;
-      color: #fff;
+    ol {
+      padding-left: 20px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #e65100;
+      user-select: none;
+    }
+    li {
+      margin-bottom: 12px;
+    }
+    .empty {
+      font-style: italic;
+      color: #b34700;
+      user-select: none;
+    }
+    button {
+      margin-top: 25px;
+      background-color: #e65100;
+      color: white;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      padding: 12px 25px;
       border: none;
-      border-radius: 4px;
+      border-radius: 12px;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(230,81,0,0.5);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #f97316;
     }
   </style>
 </head>
 <body>
-  <h1>Ranking dos Jogadores</h1>
-  <table id="rankingTable">
-    <thead>
-      <tr>
-        <th>Posição</th>
-        <th>Nick</th>
-        <th>Pontuação (Dinheiro)</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <button class="btn-restart" onclick="reiniciarJogo()">Reiniciar Jogo</button>
+  <div class="container" role="main" aria-label="Ranking dos jogadores">
+    <h1>Ranking dos Jogadores</h1>
+    <ol id="rankingList"></ol>
+    <p id="emptyMsg" class="empty" style="display:none;">Nenhum registro encontrado.</p>
+    <button id="btnBack" aria-label="Voltar para a tela inicial">Voltar</button>
+  </div>
+
   <script>
-    function loadRanking(){
-      let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
-      // Ordena do maior para o menor score
-      ranking.sort((a, b) => b.score - a.score);
-      const tbody = document.querySelector('#rankingTable tbody');
-      tbody.innerHTML = "";
-      ranking.forEach((player, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${index + 1}</td>
-                        <td>${player.nick}</td>
-                        <td>R$${player.score}</td>`;
-        tbody.appendChild(tr);
-      });
+    const rankingList = document.getElementById('rankingList');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const btnBack = document.getElementById('btnBack');
+
+    function carregarRanking() {
+      const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+      if (ranking.length === 0) {
+        emptyMsg.style.display = 'block';
+        rankingList.style.display = 'none';
+      } else {
+        emptyMsg.style.display = 'none';
+        rankingList.style.display = 'block';
+        rankingList.innerHTML = '';
+        ranking.forEach((player, index) => {
+          const li = document.createElement('li');
+          li.textContent = `${index + 1}. ${player.nick} — R$${player.score}`;
+          rankingList.appendChild(li);
+        });
+      }
     }
 
-    function reiniciarJogo(){
-      // Limpa as informações da sessão e redireciona para o index
-      sessionStorage.clear();
-      window.location.href = 'index.html';
-    }
+    btnBack.addEventListener('click', () => {
+      window.location.href = 'index.html'; // volta para a tela inicial de nick
+    });
 
-    loadRanking();
+    carregarRanking();
   </script>
 </body>
 </html>

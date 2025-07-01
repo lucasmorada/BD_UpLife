@@ -1,57 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Entrar - Quiz UpLife</title>
+  <meta charset="UTF-8" />
+  <title>Bem-vindo ao Quiz de Planejamento</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      background: linear-gradient(135deg, #fdf6e3, #e65100);
+      font-family: 'Roboto', sans-serif;
     }
-    form {
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    .container {
+      background: #fff3e0;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(230,81,0,0.4);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: #e65100;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      user-select: none;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      color: #e65100;
+      margin-bottom: 10px;
+      text-align: left;
+      user-select: none;
     }
     input[type="text"] {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 12px 15px;
+      border: 2px solid #e65100;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-family: 'Roboto', sans-serif;
+      margin-bottom: 25px;
+      outline-offset: 3px;
+      transition: outline-color 0.3s ease;
+    }
+    input[type="text"]:focus {
+      outline: 3px solid #f97316;
     }
     button {
-      padding: 10px 20px;
-      background: #e65100;
-      color: #fff;
+      background-color: #e65100;
+      color: white;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      padding: 15px 0;
+      width: 100%;
       border: none;
-      border-radius: 4px;
+      border-radius: 12px;
       cursor: pointer;
+      box-shadow: 0 6px 15px rgba(230,81,0,0.5);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #f97316;
+    }
+    .error {
+      color: #c0392b;
+      font-weight: 700;
+      margin-top: -15px;
+      margin-bottom: 15px;
+      user-select: none;
     }
   </style>
 </head>
 <body>
-  <form id="loginForm">
-    <h2>Digite seu Nick</h2>
-    <input type="text" id="nick" placeholder="Seu nick" required>
-    <button type="submit">Iniciar Jogo</button>
-  </form>
+  <div class="container" role="main" aria-label="Tela inicial para cadastro do nick">
+    <h1>Digite seu Nick</h1>
+    <form id="nickForm" novalidate>
+      <label for="nickInput">Nick do Jogador:</label>
+      <input type="text" id="nickInput" name="nickInput" placeholder="Seu apelido" maxlength="20" autocomplete="off" required aria-required="true" aria-describedby="errorMsg" />
+      <div id="errorMsg" class="error" aria-live="assertive" style="display:none;">Por favor, insira um nick válido.</div>
+      <button type="submit" aria-label="Iniciar o jogo">Começar</button>
+    </form>
+  </div>
+
   <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    const form = document.getElementById('nickForm');
+    const nickInput = document.getElementById('nickInput');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const nick = document.getElementById('nick').value.trim();
-      if(nick){
-        // Salva o nick e inicializa o dinheiro em 100
-        sessionStorage.setItem('nick', nick);
-        sessionStorage.setItem('dinheiro', 100);
-        // Redireciona para a Fase 1
-        window.location.href = 'fase1.html';
+      const nick = nickInput.value.trim();
+      if (nick.length < 2) {
+        errorMsg.style.display = 'block';
+        nickInput.focus();
+        return;
       }
+      errorMsg.style.display = 'none';
+      sessionStorage.setItem('nick', nick);
+      sessionStorage.setItem('dinheiro', 100); // Reinicia dinheiro para 100
+      window.location.href = 'fase1.html';
     });
   </script>
 </body>
