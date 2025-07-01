@@ -1,108 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Ranking dos Jogadores</title>
+  <meta charset="UTF-8">
+  <title>Ranking Final</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
     body {
       margin: 0;
-      background: linear-gradient(135deg, #fdf6e3, #e65100);
       font-family: 'Roboto', sans-serif;
-      color: #333;
-      min-height: 100vh;
+      background: linear-gradient(135deg, #fe6402, #009098);
+      color: #fff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 40px;
     }
-    .container {
-      background: #fff3e0;
+    .ranking-box {
+      background: #ffffffcc;
+      color: #333;
+      border-radius: 16px;
+      padding: 30px;
       max-width: 600px;
       width: 100%;
-      border-radius: 16px;
-      box-shadow: 0 6px 25px rgba(230,81,0,0.4);
-      padding: 30px 40px;
       text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
-    h1 {
-      font-family: 'Montserrat', sans-serif;
-      color: #e65100;
-      margin-bottom: 25px;
-      font-size: 2rem;
-      user-select: none;
+    h2 {
+      margin-top: 0;
+      color: #009098;
     }
     ol {
       padding-left: 20px;
       text-align: left;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #e65100;
-      user-select: none;
+      font-weight: bold;
     }
-    li {
-      margin-bottom: 12px;
-    }
-    .empty {
+    .mensagem {
+      margin: 20px 0;
       font-style: italic;
-      color: #b34700;
-      user-select: none;
+      font-size: 1.1rem;
     }
     button {
-      margin-top: 25px;
-      background-color: #e65100;
-      color: white;
-      font-weight: 700;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.1rem;
-      padding: 12px 25px;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #fe6402;
+      color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(230,81,0,0.5);
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    button:hover {
-      background-color: #f97316;
+      font-weight: bold;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
-  <div class="container" role="main" aria-label="Ranking dos jogadores">
-    <h1>Ranking dos Jogadores</h1>
+  <div class="ranking-box">
+    <h2>Placar Final</h2>
+    <p id="score"></p>
+    <p class="mensagem" id="mensagem"></p>
+    <h3>Ranking:</h3>
     <ol id="rankingList"></ol>
-    <p id="emptyMsg" class="empty" style="display:none;">Nenhum registro encontrado.</p>
-    <button id="btnBack" aria-label="Voltar para a tela inicial">Voltar</button>
+    <button onclick="window.location.href='index.html'">Jogar Novamente</button>
   </div>
 
   <script>
-    const rankingList = document.getElementById('rankingList');
-    const emptyMsg = document.getElementById('emptyMsg');
-    const btnBack = document.getElementById('btnBack');
+    const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+    const ultimo = ranking[0];
 
-    function carregarRanking() {
-      const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
-      if (ranking.length === 0) {
-        emptyMsg.style.display = 'block';
-        rankingList.style.display = 'none';
-      } else {
-        emptyMsg.style.display = 'none';
-        rankingList.style.display = 'block';
-        rankingList.innerHTML = '';
-        ranking.forEach((player, index) => {
-          const li = document.createElement('li');
-          li.textContent = `${index + 1}. ${player.nick} — R$${player.score}`;
-          rankingList.appendChild(li);
-        });
-      }
-    }
+    document.getElementById('score').innerText = `${ultimo.nick}: R$${ultimo.score}`;
 
-    btnBack.addEventListener('click', () => {
-      window.location.href = 'index.html'; // volta para a tela inicial de nick
+    let mensagem = '';
+    if (ultimo.score >= 2000) mensagem = 'Excelente! Você é um mestre em planejamento!';
+    else if (ultimo.score >= 1000) mensagem = 'Muito bom! Está no caminho certo!';
+    else if (ultimo.score >= 500) mensagem = 'Bom esforço, mas ainda dá pra melhorar.';
+    else mensagem = 'Você pode estudar mais sobre PCP, P6 e MS Project!';
+
+    document.getElementById('mensagem').innerText = mensagem;
+
+    const list = document.getElementById('rankingList');
+    ranking.forEach(player => {
+      const li = document.createElement('li');
+      li.textContent = `${player.nick}: R$${player.score}`;
+      list.appendChild(li);
     });
-
-    carregarRanking();
   </script>
 </body>
 </html>

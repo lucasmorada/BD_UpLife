@@ -9,17 +9,17 @@
     body {
       margin: 0; padding: 20px;
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #fdf6e3, #e65100);
+      background: linear-gradient(135deg, #fff8f0, #d4efff);
       display: flex; flex-direction: column; align-items: center;
     }
     header {
-      background: #fff3e0; padding: 15px 25px; border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(230,81,0,.3);
+      background: #e0f7fa; padding: 15px 25px; border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,144,152,.3);
       display: flex; justify-content: space-between;
       width: 100%; max-width: 800px;
     }
-    header h2 { font-family: 'Montserrat', sans-serif; color: #e65100; margin: 0; }
-    .money { display: flex; align-items: center; font-weight: bold; color: #e65100; }
+    header h2 { font-family: 'Montserrat', sans-serif; color: #009098; margin: 0; }
+    .money { display: flex; align-items: center; font-weight: bold; color: #009098; }
     .money img { width: 28px; margin-left: 8px; }
 
     main.quiz-container {
@@ -28,10 +28,10 @@
       border-radius: 16px;
       padding: 30px 40px;
       margin-top: 20px;
-      box-shadow: 0 6px 25px rgba(230,81,0,.25);
+      box-shadow: 0 6px 25px rgba(0,144,152,.25);
     }
     #questionContainer h3 {
-      color: #e65100;
+      color: #009098;
       font-family: 'Montserrat';
       font-size: 1.3rem;
       margin-bottom: 20px;
@@ -42,38 +42,12 @@
       gap: 20px;
     }
     button.option-btn {
-      background: #e65100; color: #fff;
+      background: #009098; color: #fff;
       border: none; border-radius: 10px;
       padding: 15px; font-weight: bold;
       cursor: pointer;
     }
-    #timerDisplay { margin-top: 20px; font-weight: bold; color: #e65100; }
-
-    #bonusModal, #finalResult {
-      background: #fff3e0;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 6px 25px rgba(230,81,0,0.3);
-      max-width: 600px;
-      text-align: center;
-      display: none;
-      margin-top: 30px;
-    }
-    #bonusModal h3, #finalResult h3 { margin-top: 0; color: #e65100; }
-    .bonus-btn {
-      margin: 10px; padding: 12px 20px;
-      background: #e65100; color: white;
-      font-weight: bold; border: none;
-      border-radius: 10px; cursor: pointer;
-    }
-    #finalResult ol { text-align: left; margin: 0 auto; max-width: 300px; padding-left: 20px; }
-    #finalResult button {
-      margin-top: 20px;
-      background: #e65100; color: white;
-      padding: 12px 20px; border: none;
-      border-radius: 10px; cursor: pointer;
-      font-weight: bold;
-    }
+    #timerDisplay { margin-top: 20px; font-weight: bold; color: #009098; }
   </style>
 </head>
 <body>
@@ -88,34 +62,49 @@
     <div id="timerDisplay"></div>
   </main>
 
-  <div id="bonusModal">
-    <h3>Bônus da Fase 2!</h3>
-    <p>Escolha um bônus para as próximas perguntas:</p>
-    <button class="bonus-btn" onclick="aplicarBonus('tempo')">+30 segundos por pergunta</button>
-    <button class="bonus-btn" onclick="aplicarBonus('eliminar')">Remover 1 alternativa errada</button>
-  </div>
-
-  <div id="finalResult"></div>
-
   <script>
     const questions = [
-      { question: "O que é Lead Time no MS Project?", options: ["Opção A", "Opção B", "Opção C", "Opção D"], answer: "Opção A" },
-      { question: "Start-to-Start no P6 significa?", options: ["Opção A", "Opção B", "Opção C", "Opção D"], answer: "Opção B" },
-      { question: "O que é Heijunka?", options: ["Opção A", "Opção B", "Opção C", "Opção D"], answer: "Opção C" }
+      {
+        question: "O que representa o 'Float' em um cronograma do Primavera P6?",
+        options: [
+          "A duração total do projeto",
+          "A folga disponível sem afetar o prazo",
+          "O caminho mais curto possível",
+          "A variação de custo orçado"
+        ],
+        answer: "A folga disponível sem afetar o prazo"
+      },
+      {
+        question: "Em planejamento, o que é 'nivelamento de recursos'?",
+        options: [
+          "Redução de escopo do projeto",
+          "Atribuição aleatória de tarefas",
+          "Distribuir recursos para evitar sobrecarga",
+          "Aumento de custos operacionais"
+        ],
+        answer: "Distribuir recursos para evitar sobrecarga"
+      },
+      {
+        question: "O que o gráfico de Gantt representa?",
+        options: [
+          "Curva S de orçamento",
+          "Distribuição geográfica da equipe",
+          "Duração e sequência de atividades",
+          "Estrutura analítica do projeto"
+        ],
+        answer: "Duração e sequência de atividades"
+      }
     ];
 
     let index = 0;
     let timer;
     let tempoPorPergunta = 30;
     let tempoAtual = tempoPorPergunta;
-    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 100;
-    let bonus = null;
+    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 1000;
 
     const qCont = document.getElementById('questionContainer');
     const oCont = document.getElementById('optionsContainer');
     const tDisplay = document.getElementById('timerDisplay');
-    const bonusModal = document.getElementById('bonusModal');
-    const finalResult = document.getElementById('finalResult');
 
     function iniciarTimer() {
       tempoAtual = tempoPorPergunta;
@@ -125,7 +114,7 @@
         tDisplay.textContent = `Tempo: ${tempoAtual}s`;
         if (tempoAtual <= 0) {
           clearInterval(timer);
-          dinheiro -= 300;
+          dinheiro -= 600;
           if (dinheiro < 0) dinheiro = 0;
           atualizarDinheiro();
           proxima();
@@ -139,19 +128,10 @@
     }
 
     function mostrarPergunta() {
-      if (index === 2) return mostrarBonus();
       const q = questions[index];
       qCont.innerHTML = `<h3>${q.question}</h3>`;
       oCont.innerHTML = "";
-      let opcoes = [...q.options];
-
-      if (bonus === 'eliminar') {
-        const erradas = opcoes.filter(op => op !== q.answer);
-        const remover = erradas[Math.floor(Math.random() * erradas.length)];
-        opcoes = opcoes.filter(op => op !== remover);
-      }
-
-      opcoes.forEach(op => {
+      q.options.forEach(op => {
         const btn = document.createElement('button');
         btn.textContent = op;
         btn.className = 'option-btn';
@@ -164,56 +144,24 @@
     function responder(op) {
       clearInterval(timer);
       const correta = questions[index].answer;
-      if (op === correta) dinheiro += 500 + (tempoAtual * 50);
-      else dinheiro = Math.max(0, dinheiro - 300);
+      if (op === correta) dinheiro += 500;
+      else dinheiro = Math.max(0, dinheiro - 600);
       atualizarDinheiro();
       proxima();
     }
 
     function proxima() {
       index++;
-      if (index >= questions.length) return fim();
-      mostrarPergunta();
-    }
-
-    function mostrarBonus() {
-      document.querySelector('main').style.display = 'none';
-      bonusModal.style.display = 'block';
-    }
-
-    function aplicarBonus(tipo) {
-      bonus = tipo;
-      bonusModal.style.display = 'none';
-      document.querySelector('main').style.display = 'flex';
-      if (tipo === 'tempo') tempoPorPergunta = 60;
-      mostrarPergunta();
-    }
-
-    function fim() {
-      qCont.innerHTML = "<h3>Fase 2 finalizada!</h3>";
-      oCont.innerHTML = "";
-      tDisplay.textContent = "";
-      finalResult.style.display = 'block';
-
-      const nick = sessionStorage.getItem('nick') || 'Jogador';
-      const score = dinheiro;
-      let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
-      ranking.push({ nick, score });
-      ranking.sort((a, b) => b.score - a.score);
-      localStorage.setItem('ranking', JSON.stringify(ranking));
-
-      let mensagem = '';
-      if (score >= 2000) mensagem = 'Excelente! Você é um mestre em planejamento!';
-      else if (score >= 1000) mensagem = 'Muito bom! Está no caminho certo!';
-      else if (score >= 500) mensagem = 'Bom esforço, mas ainda dá pra melhorar.';
-      else mensagem = 'Você pode estudar mais sobre PCP e ferramentas como P6 e MS Project!';
-
-      let html = `<h3>Placar Final</h3><p><strong>${nick}</strong>: R$${score}</p><p>${mensagem}</p><h4>Ranking:</h4><ol>`;
-      ranking.forEach(p => {
-        html += `<li>${p.nick}: R$${p.score}</li>`;
-      });
-      html += `</ol><button onclick=\"window.location.href='index.html'\">Reiniciar</button>`;
-      finalResult.innerHTML = html;
+      if (index >= questions.length) {
+        const nick = sessionStorage.getItem('nick') || 'Jogador';
+        let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+        ranking.push({ nick, score: dinheiro });
+        ranking.sort((a, b) => b.score - a.score);
+        localStorage.setItem('ranking', JSON.stringify(ranking));
+        window.location.href = 'ranking.html';
+      } else {
+        mostrarPergunta();
+      }
     }
 
     atualizarDinheiro();

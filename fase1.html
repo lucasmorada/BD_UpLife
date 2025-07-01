@@ -2,281 +2,166 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Fase 1 - Planejamento</title>
+  <title>Fase 1 - Intermediário</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto&display=swap');
-    * {
-      box-sizing: border-box;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+    * { box-sizing: border-box; }
     body {
-      margin: 0; 
-      background: linear-gradient(135deg, #fdf6e3, #e65100);
+      margin: 0; padding: 20px;
       font-family: 'Roboto', sans-serif;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      background: linear-gradient(135deg, #fff8f0, #ffe0cc);
+      display: flex; flex-direction: column; align-items: center;
     }
     header {
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff3e0;
-      padding: 15px 25px;
-      border-radius: 12px;
+      background: #fff3e0; padding: 15px 25px; border-radius: 12px;
       box-shadow: 0 4px 15px rgba(230,81,0,.3);
-      margin-bottom: 20px;
+      display: flex; justify-content: space-between;
+      width: 100%; max-width: 800px;
     }
-    header h2 {
-      font-family: 'Montserrat', sans-serif;
-      color: #e65100;
-      margin: 0;
-      font-size: 1.8rem;
-      letter-spacing: 1px;
-    }
-    .money {
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: #e65100;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      user-select: none;
-    }
-    .money img {
-      width: 28px;
-      filter: drop-shadow(0 0 2px #d35400);
-    }
+    header h2 { font-family: 'Montserrat', sans-serif; color: #e65100; margin: 0; }
+    .money { display: flex; align-items: center; font-weight: bold; color: #e65100; }
+    .money img { width: 28px; margin-left: 8px; }
+
     main.quiz-container {
       background: #fff;
-      width: 100%;
-      max-width: 800px;
+      width: 100%; max-width: 800px;
       border-radius: 16px;
-      box-shadow: 0 6px 25px rgba(230,81,0,.25);
       padding: 30px 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 20px;
+      box-shadow: 0 6px 25px rgba(230,81,0,.25);
     }
     #questionContainer h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.6rem;
       color: #e65100;
-      margin-bottom: 30px;
-      text-align: center;
-      line-height: 1.3;
+      font-family: 'Montserrat';
+      font-size: 1.3rem;
+      margin-bottom: 20px;
     }
     #optionsContainer {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
-      width: 100%;
     }
-    #optionsContainer button {
-      background: #e65100;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-weight: 700;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
-      padding: 16px 12px;
+    button.option-btn {
+      background: #e65100; color: #fff;
+      border: none; border-radius: 10px;
+      padding: 15px; font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.15s ease;
-      box-shadow: 0 3px 10px rgba(230,81,0,0.4);
-      user-select: none;
     }
-    #optionsContainer button:hover {
-      background: #f97316;
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(230,81,0,0.6);
-    }
-    #optionsContainer button:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px #f97316;
-    }
-    #timerDisplay {
-      margin-top: 25px;
-      font-size: 1.4rem;
-      color: #e65100;
-      font-weight: 700;
-      user-select: none;
-    }
-    #nextPhaseBtn {
-      margin-top: 35px;
-      background-color: #27ae60;
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 700;
-      padding: 15px 35px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(39,174,96,0.5);
-      transition: background-color 0.3s ease;
-      user-select: none;
-      display: none;
-    }
-    #nextPhaseBtn:hover {
-      background-color: #2ecc71;
-    }
-    @media(max-width: 600px) {
-      main.quiz-container {
-        padding: 20px 20px;
-      }
-      #optionsContainer {
-        grid-template-columns: 1fr;
-      }
-    }
+    #timerDisplay { margin-top: 20px; font-weight: bold; color: #e65100; }
   </style>
 </head>
 <body>
   <header>
-    <h2>Fase 1 - Planejamento</h2>
-    <div class="money" aria-label="Dinheiro disponível">
-      Dinheiro: R$<span id="dinheiroDisplay">100</span>
-      <img src="dinheiro.png" alt="Ícone de dinheiro" />
-    </div>
+    <h2>Fase 1 - Intermediário</h2>
+    <div class="money">R$ <span id="dinheiroDisplay">0</span> <img src="dinheiro.png" /></div>
   </header>
 
-  <main class="quiz-container" role="main">
+  <main class="quiz-container">
     <div id="questionContainer"></div>
     <div id="optionsContainer"></div>
-    <div id="timerDisplay" aria-live="polite" aria-atomic="true"></div>
+    <div id="timerDisplay"></div>
   </main>
-
-  <button id="nextPhaseBtn" aria-label="Ir para a próxima fase">Próxima Fase</button>
 
   <script>
     const questions = [
       {
-        question: "No PCP, o que é MRP II e qual sua principal diferença em relação ao MRP I?",
+        question: "Qual o objetivo do PCP na indústria?",
         options: [
-          "MRP II considera capacidade finita e integra funções da empresa; MRP I apenas calcula necessidades",
-          "MRP II só serve para controle de estoque, enquanto MRP I considera produção",
-          "MRP II é usado em serviços; MRP I apenas na indústria",
-          "MRP I tem integração financeira; MRP II não"
+          "Garantir a segurança do trabalho",
+          "Planejar, controlar e programar a produção",
+          "Reduzir custos de marketing",
+          "Gerenciar recursos financeiros"
         ],
-        answer: "MRP II considera capacidade finita e integra funções da empresa; MRP I apenas calcula necessidades"
+        answer: "Planejar, controlar e programar a produção"
       },
       {
-        question: "No MS Project, qual é o impacto de atribuir recursos com superalocação a uma tarefa crítica?",
+        question: "No MS Project, qual é a função da linha de base?",
         options: [
-          "A tarefa se torna opcional na linha de base",
-          "O software ignora a superalocação e não afeta o cronograma",
-          "Pode haver atraso no caminho crítico caso não haja redistribuição",
-          "A tarefa muda de tipo para 'esforço fixo' automaticamente"
+          "Cancelar tarefas",
+          "Marcar entregas",
+          "Comparar planejamento com execução",
+          "Definir caminhos críticos"
         ],
-        answer: "Pode haver atraso no caminho crítico caso não haja redistribuição"
+        answer: "Comparar planejamento com execução"
       },
       {
-        question: "No Primavera P6, o que representa o Total Float de uma atividade?",
+        question: "O que representa o caminho crítico em um projeto?",
         options: [
-          "Tempo máximo que uma atividade pode atrasar sem afetar o projeto",
-          "Diferença entre a duração planejada e real",
-          "Custo estimado da tarefa",
-          "Quantidade de recursos alocados além da capacidade"
+          "O caminho mais caro",
+          "A sequência de atividades que não pode atrasar",
+          "O caminho com menos recursos",
+          "O caminho alternativo do projeto"
         ],
-        answer: "Tempo máximo que uma atividade pode atrasar sem afetar o projeto"
-      },
-      {
-        question: "Qual a função do método de caminho crítico (CPM) no planejamento?",
-        options: [
-          "Estimar custos de materiais",
-          "Determinar tarefas que podem ser ignoradas",
-          "Identificar tarefas que não podem atrasar",
-          "Aumentar o tempo total do projeto"
-        ],
-        answer: "Identificar tarefas que não podem atrasar"
+        answer: "A sequência de atividades que não pode atrasar"
       }
     ];
 
-    let currentQuestionIndex = 0;
+    let index = 0;
     let timer;
-    let timePerQuestion = 30; // Aumentado para 30 segundos
-    let currentTime = timePerQuestion;
-    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 100;
+    let tempoPorPergunta = 30;
+    let tempoAtual = tempoPorPergunta;
+    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 1000;
 
-    const questionContainer = document.getElementById('questionContainer');
-    const optionsContainer = document.getElementById('optionsContainer');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const dinheiroDisplay = document.getElementById('dinheiroDisplay');
-    const nextPhaseBtn = document.getElementById('nextPhaseBtn');
+    const qCont = document.getElementById('questionContainer');
+    const oCont = document.getElementById('optionsContainer');
+    const tDisplay = document.getElementById('timerDisplay'); 
 
-    function startTimer() {
-      currentTime = timePerQuestion;
-      timerDisplay.textContent = `Tempo: ${currentTime}s`;
+    function iniciarTimer() {
+      tempoAtual = tempoPorPergunta;
+      tDisplay.textContent = `Tempo: ${tempoAtual}s`;
       timer = setInterval(() => {
-        currentTime--;
-        timerDisplay.textContent = `Tempo: ${currentTime}s`;
-        if (currentTime <= 0) {
+        tempoAtual--;
+        tDisplay.textContent = `Tempo: ${tempoAtual}s`;
+        if (tempoAtual <= 0) {
           clearInterval(timer);
-          dinheiro -= 300;
+          dinheiro -= 600;
           if (dinheiro < 0) dinheiro = 0;
-          updateDinheiro();
-          nextQuestion();
+          atualizarDinheiro();
+          proxima();
         }
       }, 1000);
     }
 
-    function updateDinheiro() {
-      dinheiroDisplay.textContent = dinheiro;
+    function atualizarDinheiro() {
+      document.getElementById('dinheiroDisplay').textContent = dinheiro;
       sessionStorage.setItem('dinheiro', dinheiro);
     }
 
-    function displayQuestion() {
-      if (currentQuestionIndex >= questions.length) {
-        endPhase();
-        return;
-      }
-      const currentQuestion = questions[currentQuestionIndex];
-      questionContainer.innerHTML = `<h3>${currentQuestion.question}</h3>`;
-      optionsContainer.innerHTML = "";
-      currentQuestion.options.forEach(option => {
-        const btn = document.createElement("button");
-        btn.textContent = option;
-        btn.onclick = () => answerQuestion(option);
-        optionsContainer.appendChild(btn);
+    function mostrarPergunta() {
+      const q = questions[index];
+      qCont.innerHTML = `<h3>${q.question}</h3>`;
+      oCont.innerHTML = "";
+      q.options.forEach(op => {
+        const btn = document.createElement('button');
+        btn.textContent = op;
+        btn.className = 'option-btn';
+        btn.onclick = () => responder(op);
+        oCont.appendChild(btn);
       });
-      startTimer();
+      iniciarTimer();
     }
 
-    function answerQuestion(selected) {
+    function responder(op) {
       clearInterval(timer);
-      const currentQuestion = questions[currentQuestionIndex];
-      if (selected === currentQuestion.answer) {
-        let bonus = currentTime * 50;
-        dinheiro += (500 + bonus);
+      const correta = questions[index].answer;
+      if (op === correta) dinheiro += 500;
+      else dinheiro = Math.max(0, dinheiro - 600);
+      atualizarDinheiro();
+      proxima();
+
+    }
+
+    function proxima() {
+      index++;
+      if (index >= questions.length) {
+        window.location.href = 'fase2.html';
       } else {
-        dinheiro -= 300;
-        if (dinheiro < 0) dinheiro = 0;
+        mostrarPergunta();
       }
-      updateDinheiro();
-      nextQuestion();
     }
 
-    function nextQuestion() {
-      currentQuestionIndex++;
-      displayQuestion();
-    }
-
-    function endPhase() {
-      questionContainer.innerHTML = "<h3>Fase 1 finalizada!</h3>";
-      optionsContainer.innerHTML = "";
-      timerDisplay.textContent = "";
-      nextPhaseBtn.style.display = "inline-block";
-    }
-
-    nextPhaseBtn.addEventListener('click', () => {
-      window.location.href = 'fase2.html';
-    });
-
-    updateDinheiro();
-    displayQuestion();
+    atualizarDinheiro();
+    mostrarPergunta();
   </script>
 </body>
 </html>
