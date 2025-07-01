@@ -1,0 +1,166 @@
+<!-- fase2.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fase 2 - Avançado</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    .money { font-size: 20px; font-weight: bold; }
+    .quiz-container { background: #fff; padding: 20px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .timer { font-size: 18px; color: #e65100; margin-top: 10px; }
+    .options button { margin: 5px; padding: 10px 20px; background: #e65100; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    .result { margin-top: 20px; background: #fff3e0; padding: 15px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div><h2>Fase 2 - Avançado</h2></div>
+    <div class="money">
+      Dinheiro: R$<span id="dinheiroDisplay">0</span>
+      <img src="https://raw.githubusercontent.com/seu-usuario/seu-repositorio/main/img/dinheiro.png" alt="Dinheiro" style="width:20px; vertical-align:middle;">
+    </div>
+  </div>
+  <div class="quiz-container">
+    <div id="questionContainer"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="timer" id="timerDisplay"></div>
+  </div>
+  <div class="result" id="finalResult" style="display:none;"></div>
+
+  <script>
+    const questions = [
+      {
+        question: "Qual é a finalidade do recurso 'Lead Time' em atividades no MS Project?",
+        options: [
+          "Permitir que uma atividade comece antes da anterior terminar completamente",
+          "Calcular a margem de erro do cronograma",
+          "Aumentar a duração total do projeto",
+          "Determinar o caminho crítico de forma manual"
+        ],
+        answer: "Permitir que uma atividade comece antes da anterior terminar completamente"
+      },
+      {
+        question: "No Primavera P6, o que acontece ao definir um relacionamento do tipo SS (Start-to-Start)?",
+        options: [
+          "A atividade sucessora só pode iniciar após o fim da predecessora",
+          "Ambas as atividades iniciam ao mesmo tempo",
+          "A sucessora começa quando a predecessora termina",
+          "A sucessora termina antes da predecessora começar"
+        ],
+        answer: "Ambas as atividades iniciam ao mesmo tempo"
+      },
+      {
+        question: "Em PCP, o que significa o termo 'Heijunka'?",
+        options: [
+          "Nivelamento da produção para reduzir picos e vales",
+          "Estoque de segurança para atrasos",
+          "Produção por lote econômico",
+          "Controle estatístico do processo"
+        ],
+        answer: "Nivelamento da produção para reduzir picos e vales"
+      },
+      {
+        question: "Qual é a vantagem de usar o método Earned Value (EV) no gerenciamento de projetos?",
+        options: [
+          "Avalia desempenho do projeto em custo e prazo com indicadores",
+          "Remove a necessidade de linha de base",
+          "Garante a finalização do projeto antes do prazo",
+          "Diminui o custo de recursos humanos"
+        ],
+        answer: "Avalia desempenho do projeto em custo e prazo com indicadores"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let timer;
+    let timePerQuestion = 10;
+    let currentTime = timePerQuestion;
+    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 0;
+
+    const questionContainer = document.getElementById('questionContainer');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const dinheiroDisplay = document.getElementById('dinheiroDisplay');
+    const finalResult = document.getElementById('finalResult');
+
+    function startTimer() {
+      currentTime = timePerQuestion;
+      timerDisplay.textContent = "Tempo: " + currentTime + "s";
+      timer = setInterval(() => {
+        currentTime--;
+        timerDisplay.textContent = "Tempo: " + currentTime + "s";
+        if(currentTime <= 0){
+          clearInterval(timer);
+          dinheiro -= 300;
+          if(dinheiro < 0) dinheiro = 0;
+          updateDinheiro();
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateDinheiro(){
+      dinheiroDisplay.textContent = dinheiro;
+      sessionStorage.setItem('dinheiro', dinheiro);
+    }
+
+    function displayQuestion() {
+      if(currentQuestionIndex >= questions.length){
+        endPhase();
+        return;
+      }
+      const currentQuestion = questions[currentQuestionIndex];
+      questionContainer.innerHTML = `<h3>${currentQuestion.question}</h3>`;
+      optionsContainer.innerHTML = "";
+      currentQuestion.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => answerQuestion(option);
+        optionsContainer.appendChild(btn);
+      });
+      startTimer();
+    }
+
+    function answerQuestion(selected) {
+      clearInterval(timer);
+      const currentQuestion = questions[currentQuestionIndex];
+      if(selected === currentQuestion.answer){
+        let bonus = currentTime * 50;
+        dinheiro += (500 + bonus);
+      } else {
+        dinheiro -= 300;
+        if(dinheiro < 0) dinheiro = 0;
+      }
+      updateDinheiro();
+      nextQuestion();
+    }
+
+    function nextQuestion(){
+      currentQuestionIndex++;
+      displayQuestion();
+    }
+
+    function endPhase(){
+      questionContainer.innerHTML = "<h3>Fase 2 finalizada!</h3>";
+      optionsContainer.innerHTML = "";
+      timerDisplay.textContent = "";
+      finalResult.style.display = 'block';
+      const nick = sessionStorage.getItem('nick') || 'Jogador';
+      const score = dinheiro;
+      let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+      ranking.push({ nick, score });
+      ranking.sort((a,b) => b.score - a.score);
+      localStorage.setItem('ranking', JSON.stringify(ranking));
+      let html = `<h3>Placar Final</h3><p><strong>${nick}</strong>: R$${score}</p><h4>Ranking:</h4><ol>`;
+      ranking.forEach(p => html += `<li>${p.nick}: R$${p.score}</li>`);
+      html += "</ol>";
+      finalResult.innerHTML = html;
+    }
+
+    updateDinheiro();
+    displayQuestion();
+  </script>
+</body>
+</html>

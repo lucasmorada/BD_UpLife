@@ -1,0 +1,160 @@
+<!-- fase1.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fase 1 - Planejamento</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    .money { font-size: 20px; font-weight: bold; }
+    .quiz-container { background: #fff; padding: 20px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .timer { font-size: 18px; color: #e65100; margin-top: 10px; }
+    .options button { margin: 5px; padding: 10px 20px; background: #e65100; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    .next-phase { margin-top: 20px; padding: 10px 20px; background: green; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div><h2>Fase 1 - Planejamento</h2></div>
+    <div class="money">
+      Dinheiro: R$<span id="dinheiroDisplay">100</span>
+      <img src="https://raw.githubusercontent.com/seu-usuario/seu-repositorio/main/img/dinheiro.png" alt="Dinheiro" style="width:20px; vertical-align:middle;">
+    </div>
+  </div>
+  <div class="quiz-container">
+    <div id="questionContainer"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="timer" id="timerDisplay"></div>
+  </div>
+  <button class="next-phase" id="nextPhaseBtn" style="display:none;">Próxima Fase</button>
+
+  <script>
+    const questions = [
+      {
+        question: "No PCP, o que é MRP II e qual sua principal diferença em relação ao MRP I?",
+        options: [
+          "MRP II considera capacidade finita e integra funções da empresa; MRP I apenas calcula necessidades",
+          "MRP II só serve para controle de estoque, enquanto MRP I considera produção",
+          "MRP II é usado em serviços; MRP I apenas na indústria",
+          "MRP I tem integração financeira; MRP II não"
+        ],
+        answer: "MRP II considera capacidade finita e integra funções da empresa; MRP I apenas calcula necessidades"
+      },
+      {
+        question: "No MS Project, qual é o impacto de atribuir recursos com superalocação a uma tarefa crítica?",
+        options: [
+          "A tarefa se torna opcional na linha de base",
+          "O software ignora a superalocação e não afeta o cronograma",
+          "Pode haver atraso no caminho crítico caso não haja redistribuição",
+          "A tarefa muda de tipo para 'esforço fixo' automaticamente"
+        ],
+        answer: "Pode haver atraso no caminho crítico caso não haja redistribuição"
+      },
+      {
+        question: "No Primavera P6, o que representa o Total Float de uma atividade?",
+        options: [
+          "Tempo máximo que uma atividade pode atrasar sem afetar o projeto",
+          "Diferença entre a duração planejada e real",
+          "Custo estimado da tarefa",
+          "Quantidade de recursos alocados além da capacidade"
+        ],
+        answer: "Tempo máximo que uma atividade pode atrasar sem afetar o projeto"
+      },
+      {
+        question: "Qual a função do método de caminho crítico (CPM) no planejamento?",
+        options: [
+          "Estimar custos de materiais",
+          "Determinar tarefas que podem ser ignoradas",
+          "Identificar tarefas que não podem atrasar",
+          "Aumentar o tempo total do projeto"
+        ],
+        answer: "Identificar tarefas que não podem atrasar"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let timer;
+    let timePerQuestion = 10;
+    let currentTime = timePerQuestion;
+    let dinheiro = parseInt(sessionStorage.getItem('dinheiro')) || 100;
+
+    const questionContainer = document.getElementById('questionContainer');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const dinheiroDisplay = document.getElementById('dinheiroDisplay');
+    const nextPhaseBtn = document.getElementById('nextPhaseBtn');
+
+    function startTimer() {
+      currentTime = timePerQuestion;
+      timerDisplay.textContent = "Tempo: " + currentTime + "s";
+      timer = setInterval(() => {
+        currentTime--;
+        timerDisplay.textContent = "Tempo: " + currentTime + "s";
+        if(currentTime <= 0){
+          clearInterval(timer);
+          dinheiro -= 300;
+          if(dinheiro < 0) dinheiro = 0;
+          updateDinheiro();
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateDinheiro(){
+      dinheiroDisplay.textContent = dinheiro;
+      sessionStorage.setItem('dinheiro', dinheiro);
+    }
+
+    function displayQuestion() {
+      if(currentQuestionIndex >= questions.length){
+        endPhase();
+        return;
+      }
+      const currentQuestion = questions[currentQuestionIndex];
+      questionContainer.innerHTML = `<h3>${currentQuestion.question}</h3>`;
+      optionsContainer.innerHTML = "";
+      currentQuestion.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => answerQuestion(option);
+        optionsContainer.appendChild(btn);
+      });
+      startTimer();
+    }
+
+    function answerQuestion(selected) {
+      clearInterval(timer);
+      const currentQuestion = questions[currentQuestionIndex];
+      if(selected === currentQuestion.answer){
+        let bonus = currentTime * 50;
+        dinheiro += (500 + bonus);
+      } else {
+        dinheiro -= 300;
+        if(dinheiro < 0) dinheiro = 0;
+      }
+      updateDinheiro();
+      nextQuestion();
+    }
+
+    function nextQuestion(){
+      currentQuestionIndex++;
+      displayQuestion();
+    }
+
+    function endPhase(){
+      questionContainer.innerHTML = "<h3>Fase 1 finalizada!</h3>";
+      optionsContainer.innerHTML = "";
+      timerDisplay.textContent = "";
+      nextPhaseBtn.style.display = "block";
+    }
+
+    nextPhaseBtn.addEventListener('click', () => {
+      window.location.href = 'fase2.html';
+    });
+
+    updateDinheiro();
+    displayQuestion();
+  </script>
+</body>
+</html>

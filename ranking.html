@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ranking - Quiz UpLife</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1 {
+      color: #e65100;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #e65100;
+      color: #fff;
+    }
+    .btn-restart {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #e65100;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ranking dos Jogadores</h1>
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>Posição</th>
+        <th>Nick</th>
+        <th>Pontuação (Dinheiro)</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button class="btn-restart" onclick="reiniciarJogo()">Reiniciar Jogo</button>
+  <script>
+    function loadRanking(){
+      let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+      // Ordena do maior para o menor score
+      ranking.sort((a, b) => b.score - a.score);
+      const tbody = document.querySelector('#rankingTable tbody');
+      tbody.innerHTML = "";
+      ranking.forEach((player, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${index + 1}</td>
+                        <td>${player.nick}</td>
+                        <td>R$${player.score}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function reiniciarJogo(){
+      // Limpa as informações da sessão e redireciona para o index
+      sessionStorage.clear();
+      window.location.href = 'index.html';
+    }
+
+    loadRanking();
+  </script>
+</body>
+</html>
